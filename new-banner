@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# new-banner ~ scaffold a colorized BBS-style .dirbanner in the current directory.
+#
+# Usage:
+#   new-banner                       # uses the folder name as the title
+#   new-banner "TITLE"
+#   new-banner "TITLE" "subtitle"
+#   new-banner "TITLE" "subtitle" "the spine line"
+#
+# Then edit the generated .dirbanner to taste. cd out and back to see it glow.
+set -euo pipefail
+
+TITLE="${1:-$(basename "$PWD")}"
+SUBTITLE="${2:-a directory worth announcing}"
+SPINE="${3:-Every directory deserves an entrance.}"
+
+# ── BBS palette (bold/bright ANSI). Skipping bright blue on purpose. ──
+ESC=$(printf '\033')
+R="${ESC}[0m";   BOX="${ESC}[1;35m"; CY="${ESC}[1;36m"; G="${ESC}[1;32m"
+Y="${ESC}[1;33m"; W="${ESC}[1;37m";  RED="${ESC}[1;31m"; D="${ESC}[1;30m"
+bar=$(printf '═%.0s' $(seq 1 62))
+
+F=".dirbanner"
+if [ -e "$F" ]; then
+  printf '%s.dirbanner already exists here. Overwrite? [y/N]%s ' "$Y" "$R"
+  read -r ans
+  case "$ans" in y|Y) ;; *) echo "aborted."; exit 1 ;; esac
+fi
+
+# Spaced, upper-cased title for the dial-up header band.
+header="$(printf '%s' "$TITLE" | tr '[:lower:]' '[:upper:]' | sed 's/./& /g')"
+
+# Big title block: use figlet if available (then tint it cyan), else a tidy fallback.
+emit_title() {
+  if command -v figlet >/dev/null 2>&1; then
+    figlet -w 80 "$TITLE" | while IFS= read -r line; do
+      printf '   %s%s%s\n' "$CY" "$line" "$R"
+    done
+  else
+    printf '   %s### %s ###%s\n' "$CY" "$TITLE" "$R"
+  fi
+}
+
+{
+  printf '%s\n' "${BOX} ╔${bar}╗${R}"
+  printf '%s\n' ""
+  printf '%s\n' "    ${Y}▓▒░${R} ${G}≡≡≡   ${header}  ≡≡≡${R} ${Y}░▒▓${R}"
+  printf '%s\n' ""
+  emit_title
+  printf '%s\n' "      ${W}${SUBTITLE}${R}"
+  printf '%s\n' "      ${BOX}\"${SPINE}\"${R}"
+  printf '%s\n' ""
+  printf '%s\n' "   ${G}▸${R} ${W}what's here:${R} ${D}describe the structure (edit me)${R}"
+  printf '%s\n' "   ${G}▸${R} ${W}gotchas:${R}     ${D}secrets, envs, anything load-bearing${R}"
+  printf '%s\n' ""
+  printf '%s\n' "   ${Y}🔗 your-link-here${R}"
+  printf '%s\n' ""
+  printf '%s\n' "   ${Y}go →${R}  ${G}your-start-command${R}"
+  printf '%s\n' ""
+  printf '%s\n' "${BOX} ╚${bar}╝${R}   ${RED}NO CARRIER${R}"
+} > "$F"
+
+printf '%s\n' "Wrote $F ~ edit it, then cd out and back to see it."
+cat "$F"
