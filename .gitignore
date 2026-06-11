@@ -5,3 +5,6 @@
 # Editor cruft
 *~
 *.swp
+
+# Local session context (encrypted personal notes ~ never publish)
+.claude/
