@@ -1,16 +1,6 @@
 <div align="center">
 
-```
- ╔══════════════════════════════════════════════════════════════╗
-    ▓▒░  ≡≡≡   D I R B A N N E R   ·   ATDT YOUR FILESYSTEM   ≡≡≡  ░▒▓
-
-   ██████   ██  ██████      🦊  per-directory ANSI banners
-   ██   ██  ██  ██   ██         pure BBS nostalgia for your terminal
-   ██   ██  ██  ██████
-   ██   ██  ██  ██   ██     "Every directory deserves an entrance."
-   ██████   ██  ██   ██
- ╚══════════════════════════════════════════════════════════════╝   NO CARRIER
-```
+<img src="assets/demo.svg" alt="dirbanner ~ per-directory ANSI banners" width="720">
 
 **Your terminal, like it's 1992.** Drop a `.dirbanner` file in any directory and
 it lights up the moment you `cd` in ~ block letters, double-line frames, and that
